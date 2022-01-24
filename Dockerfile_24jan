@@ -1,0 +1,28 @@
+FROM python:3.8-slim-buster
+
+#copy the contents to the root
+COPY . /app
+
+#set the working directory
+WORKDIR /app
+
+# install the packages
+RUN apt update && \
+    apt-get update && \
+    pip install --upgrade pip && \
+    apt-get install -y cron && \
+    apt-get install -y vim && \
+    python3 -m pip install -r requirements.txt --no-cache-dir
+
+
+#copy the cronfile to cron directory
+COPY ./cronfile /etc/cron.d
+
+#change the permission of the cronfile
+RUN chmod 0644 /etc/cron.d/cronfile
+
+#apply the cron job
+RUN crontab /etc/cron.d/cronfile
+
+#command to run the script
+CMD ["cron" ,"-f"]
