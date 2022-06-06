@@ -11,7 +11,6 @@ USERID=${UID}
 echo "the current userid is ${USERID} and username is $USERNAME"
 
 #running the python file
-#pip3 install -r /app/requirements.txt
 python3 /app/index.py
 
 if [[ ${?} -eq 0 ]]

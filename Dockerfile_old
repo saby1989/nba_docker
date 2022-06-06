@@ -1,0 +1,26 @@
+FROM ubuntu
+
+#update ubuntu
+RUN apt-get update
+RUN apt-get install -y python3 python3-pip cron
+
+#copy the contents to the root
+RUN mkdir app
+COPY . /app
+
+#set the working directory
+WORKDIR /app
+
+# install the packages
+RUN pip3 install psycopg2-binary
+RUN pip3 install -r /app/requirements.txt 
+
+#copy the cronfile to cron directory
+COPY cronfile /etc/cron.d/cronfile
+#change the permission of the cronfile
+RUN chmod 0644 /etc/cron.d/cronfile
+#apply the cron job
+RUN crontab /etc/cron.d/cronfile
+
+#command to run the script
+CMD ["cron" ,"-f"]
